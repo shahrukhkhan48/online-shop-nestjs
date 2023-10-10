@@ -11,14 +11,23 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { User } from "./users/user.entity";
 import { UsersModule } from "./users/user.module";
 import { UsersService } from './users/users.service';
-import {AuthModule} from "./auth/auth.module"; // Ensure you import UsersService
+import { AuthModule } from "./auth/auth.module";
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync({
+      imports: [AuthModule],
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
-      context: ({ req }) => ({ user: req.user }),
+      useFactory: (authService: AuthService) => ({
+        autoSchemaFile: 'schema.gql',
+        context: async ({ req }) => {
+          const token = req.headers.authorization || '';
+          const user = await authService.validateUser(token);
+          return { user };
+        },
+      }),
+      inject: [AuthService],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -33,15 +42,18 @@ import {AuthModule} from "./auth/auth.module"; // Ensure you import UsersService
     CategoriesModule,
     ProductsModule,
     UsersModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthService], // Add AuthService here
 })
 export class AppModule implements OnModuleInit {
-  constructor(private usersService: UsersService) {} // Inject UsersService
+  constructor(
+      private usersService: UsersService,
+      private authService: AuthService, // Inject AuthService
+  ) {}
 
   async onModuleInit() {
-    await this.usersService.createAdminUserIfNotExists(); // Create admin user if not exists
+    await this.usersService.createAdminUserIfNotExists();
   }
 }

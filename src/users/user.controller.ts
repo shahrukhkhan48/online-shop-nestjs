@@ -19,7 +19,7 @@ export class UserController {
 
         const createdUser = await this.userService.create(req.user?.role, user);
         const token = await this.authService.generateToken(createdUser);
-        return { JWT_Token: token };
+        return { Authorization: "Bearer "+token };
     }
 
     @Post('login')
@@ -29,6 +29,6 @@ export class UserController {
             return 'Invalid credentials';
         }
         const token = await this.authService.generateToken(user);
-        return { JWT_Token: token };
+        return { Authorization: "Bearer "+token };
     }
 }
