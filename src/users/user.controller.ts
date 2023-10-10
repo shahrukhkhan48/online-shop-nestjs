@@ -1,4 +1,3 @@
-
 import {Controller, Post, Body, Req, ForbiddenException, UseGuards} from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from './users.service';
@@ -19,7 +18,8 @@ export class UserController {
         }
 
         const createdUser = await this.userService.create(req.user?.role, user);
-        return this.authService.generateToken(createdUser);
+        const token = await this.authService.generateToken(createdUser);
+        return { JWT_Token: token };
     }
 
     @Post('login')
@@ -28,6 +28,7 @@ export class UserController {
         if (!user) {
             return 'Invalid credentials';
         }
-        return this.authService.generateToken(user);
+        const token = await this.authService.generateToken(user);
+        return { JWT_Token: token };
     }
 }

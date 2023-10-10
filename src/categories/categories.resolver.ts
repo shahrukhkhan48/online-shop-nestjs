@@ -11,7 +11,6 @@ import { Category } from './category.entity';
 import { CreateCategoryDto } from './create-category.dto';
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Roles } from '../users/roles.decorator';
-import { RolesGuard } from '../users/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Resolver((of) => Category)
@@ -23,18 +22,7 @@ export class CategoriesResolver {
     return this.categoriesService.findAll();
   }
 
-  @Query((returns) => Category)
-  async category(
-      @Args('id', { type: () => Int }) id: number,
-  ): Promise<Category> {
-    const category = await this.categoriesService.findById(id);
-    if (!category) {
-      throw new NotFoundException(`Category with ID ${id} not found`);
-    }
-    return category;
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles('admin')
   @Mutation((returns) => Category)
   async createCategory(

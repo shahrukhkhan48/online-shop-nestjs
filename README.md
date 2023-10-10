@@ -36,59 +36,103 @@ When running the application with `npm run start`, if an admin user does not exi
 - **Password**: admin
 - **Role**: admin
 
+
 ## Using the API
 
 ### User Registration and Authentication
 
-- Register a new user:
+- **Register a new user:**
+   - **Endpoint:** POST `/users/register`
+   - **Body:**
+     ```json
+     {
+       "username": "your_username",
+       "password": "your_password",
+       "role": "customer"
+     }
+     ```
+  Note: Only users with `admin` role can create new users with `admin` role.
 
-POST `/users/register`
-Body: `{{"username": "your_username", "password": "your_password", "role": "customer"}}`
-
-- Login:
-
-POST `/users/login`
-Body: `{{"username": "your_username", "password": "your_password"}}`
-
-On successful login, you'll receive a JWT token. Use this token as a bearer token in the Authorization header to access protected routes.
-
+- **Login:**
+   - **Endpoint:** POST `/users/login`
+   - **Body:**
+     ```json
+     {
+       "username": "your_username",
+       "password": "your_password"
+     }
+     ```
+  Upon successful login, you'll receive a JWT token. Use this token as a bearer token in the Authorization header to access protected routes.
 
 ### Products
 
-1. **Get all products**:
-   - Endpoint: `GET /products`
+1. **Get all products:**
+   - **Endpoint:** GET `/products`
 
-2. **Get a single product**:
-   - Endpoint: `GET /products/:id`
+2. **Get a single product:**
+   - **Endpoint:** GET `/products/:id`
    - Replace `:id` with the actual product ID.
 
-3. **Add a new product (Admin only)**:
-   - Endpoint: `POST /products`
-   - Body:
-   ```json
-   {
-     "title": "Product Title",
-     "description": "Product Description",
-     "price": 100.50
-   }
-   ```
+3. **Get products by category:**
+   - **Endpoint:** GET `/category/:categoryId/products`
+   - Replace `:categoryId` with the actual category ID.
 
-4. **Update a product (Admin only)**:
-   - Endpoint: `PUT /products/:id`
+4. **Add a new product (Admin only):**
+   - **Endpoint:** POST `/products`
+   - **Body:**
+     ```json
+     {
+       "categoryId": "Category_ID",
+       "name": "Product Name",
+       "price": 100.50
+     }
+     ```
+
+5. **Update a product (Admin only):**
+   - **Endpoint:** PUT `/products/:id`
    - Replace `:id` with the actual product ID you want to update.
-   - Body:
-   ```json
-   {
-     "title": "Updated Product Title",
-     "description": "Updated Product Description",
-     "price": 105.00
-   }
-   ```
+   - **Body:**
+     ```json
+     {
+       "categoryId": "New_Category_ID",
+       "name": "Updated Product Name",
+       "price": 105.00
+     }
+     ```
 
-5. **Delete a product (Admin only)**:
-   - Endpoint: `DELETE /products/:id`
+6. **Delete a product (Admin only):**
+   - **Endpoint:** DELETE `/products/:id`
    - Replace `:id` with the actual product ID you want to delete.
 
+### Categories
+
+1. **Get all categories:**
+   - **Endpoint:** GET `/categories`
+
+2. **Add a new category (Admin only):**
+   - **Endpoint:** POST `/categories`
+   - **Body:**
+     ```json
+     {
+       "name": "Category Name"
+     }
+     ```
+
+3. **Update a category (Admin only):**
+   - **Endpoint:** PUT `/categories/:id`
+   - Replace `:id` with the actual category ID you want to update.
+   - **Body:**
+     ```json
+     {
+       "name": "Updated Category Name"
+     }
+     ```
+
+4. **Delete a category (Admin only):**
+   - **Endpoint:** DELETE `/categories/:id`
+   - Replace `:id` with the actual category ID you want to delete.
+
+### Authorization
 
 Remember to include the JWT token in the request headers for routes that require authentication:
 ```bash
@@ -97,7 +141,8 @@ Authorization: Bearer YOUR_JWT_TOKEN_HERE
 
 ### Role-Based Access Control
 
-Only users with the `admin` role can create, update, and delete products. Both `admin` and `customer` roles can view products.
+Only users with the `admin` role can create, update, and delete products and categories. Both `admin` and `customer` roles can view products and categories.
+
 
 ## GraphQL Interface
 

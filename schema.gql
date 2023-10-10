@@ -16,14 +16,15 @@ type Product {
 
 type Query {
   categories: [Category!]!
-  category(id: Int!): Category!
-  products: [Product!]!
+  productsByCategory(categoryId: Int!): [Product!]!
   product(id: Int!): Product!
 }
 
 type Mutation {
   createCategory(createCategoryData: CreateCategoryDto!): Category!
   createProduct(createProductData: CreateProductDto!): Product!
+  updateProduct(id: Int!, updateProductData: UpdateProductDto!): Product!
+  deleteProduct(id: Int!): Boolean!
 }
 
 input CreateCategoryDto {
@@ -34,4 +35,10 @@ input CreateProductDto {
   categoryId: Int!
   name: String!
   price: Int!
+}
+
+input UpdateProductDto {
+  categoryId: Int
+  name: String
+  price: Int
 }

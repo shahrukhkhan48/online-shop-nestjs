@@ -12,14 +12,14 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './create-product.dto';
-import { UpdateProductDto } from './update-product.dto';
+import { UpdateProductDto } from './product.dto';
 import { Product } from "./product.entity";
 import { Roles } from '../users/roles.decorator';
-import { RolesGuard } from '../users/roles.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('products')
+@Controller('category')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -43,9 +43,9 @@ export class ProductsController {
     return await this.productsService.findById(id);
   }
 
-  @Get()
+  @Get(':categoryId/products')
   async findAllByCategoryId(
-      @Query('categoryId', ParseIntPipe) categoryId: number,
+      @Param('categoryId', ParseIntPipe) categoryId: number,
   ): Promise<Product[]> {
     return await this.productsService.findAllByCategoryId(categoryId);
   }
