@@ -45,12 +45,12 @@ import { AuthService } from './auth/auth.service';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService], // Add AuthService here
+  providers: [AppService, AuthService],
 })
 export class AppModule implements OnModuleInit {
   constructor(
       private usersService: UsersService,
-      private authService: AuthService, // Inject AuthService
+      private authService: AuthService,
   ) {}
 
   async onModuleInit() {

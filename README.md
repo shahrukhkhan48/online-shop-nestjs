@@ -37,6 +37,42 @@ When running the application with `npm run start`, if an admin user does not exi
 - **Role**: admin
 
 
+
+## Getting Started
+
+### Visit the Homepage
+
+**Open Your Browser**: Navigate to [http://localhost:3000](http://localhost:3000) to view the welcome page.
+
+   This page provides a quick overview of how to interact with the API and the GraphQL Playground, ensuring a smooth start with the developed application.
+
+### GraphQL Playground
+
+The GraphQL Playground provides a space to interactively explore and test the GraphQL API. You can access it by visiting:
+
+- [http://localhost:3000/graphql](http://localhost:3000/graphql)
+
+In the playground, you can create, test, and optimize your GraphQL queries and mutations before utilizing them in your application development or for testing purposes.
+
+### Download the Postman Collection
+
+1. **Download**: To interact with the REST API, download the Postman collection from the homepage or directly from [http://localhost:3000/Online%20Shop%20API.postman_collection.json](http://localhost:3000/Online%20Shop%20API.postman_collection.json).
+
+2. **Import to Postman**:
+    - Open Postman.
+    - Click on "Import" at the top left.
+    - Choose the downloaded file or drag it into the Postman window.
+
+   This collection provides a set of predefined requests organized into folders for user-related, product-related, and category-related operations, configured to use with the local development environment.
+
+3. **Setup Environment Variables**:
+    - After importing the collection, ensure to set up Postman environment variables for `url` and `jwt_token`.
+    - `url`: [http://localhost:3000](http://localhost:3000)
+    - `jwt_token`: Ensure to update this variable after obtaining a token through user registration/login.
+
+Now, you're all set to explore, test, and interact with the APIs!
+
+
 ## Using the API
 
 ### User Registration and Authentication
@@ -152,43 +188,109 @@ If you've integrated GraphQL, you can access the GraphQL playground at:
 http://localhost:3000/graphql
 ```
 
-## Further Information
 
-For more details on specific endpoints or GraphQL operations, refer to the inline documentation or generated API docs (if available).
+## GraphQL Authorization and Usage
 
-## JWT Authentication
+### Authorizing Your GraphQL Requests
 
-After successful registration or login, the API returns a JWT (JSON Web Token). This token serves as proof of authentication and should be included in the header of subsequent requests to access protected routes.
+After obtaining the JWT token from the REST API (by registering a new user or logging in), you need to add it to your GraphQL requests to access protected routes.
 
-### Obtaining the JWT Token
+1. **Obtain JWT Token**: Utilize the REST API to obtain the JWT token by registering or logging in via Postman using the provided collection.
 
-1. Register a new user or log in using the provided endpoints.
-2. On successful authentication, the response will include a JWT token.
+2. **Add to GraphQL Playground**:
+    - Navigate to [http://localhost:3000/graphql](http://localhost:3000/graphql).
+    - On the bottom left, find the "HTTP HEADERS" tab and insert your token like so:
+      ```json
+      {
+        "Authorization": "Bearer YOUR_JWT_TOKEN_HERE"
+      }
+      ```
+   Replace `YOUR_JWT_TOKEN_HERE` with the token you obtained.
 
-Example response:
-```json
-{
-  "access_token": "YOUR_JWT_TOKEN_HERE"
-}
-```
 
-### Using the JWT Token
+### Sample Queries and Mutations
 
-1. For making requests to protected routes, include the JWT token in the request headers.
+#### Queries
 
-```bash
-Authorization: Bearer YOUR_JWT_TOKEN_HERE
-```
+1. **Fetch All Categories**
+   ```graphql
+   query {
+     categories {
+       id
+       name
+     }
+   }
+   ```
 
-Replace `YOUR_JWT_TOKEN_HERE` with the actual token obtained after logging in.
+2. **Fetch Specific Category**
+   ```graphql
+   query {
+     category(id: 1) {
+       id
+       name
+     }
+   }
+   ```
 
-### Token Expiration
+3. **Fetch Products by Category**
+   ```graphql
+   query {
+     productsByCategory(categoryId: 1) {
+       id
+       name
+       price
+     }
+   }
+   ```
 
-Depending on the configuration, JWT tokens may have an expiration time. If your token is expired, you'll need to log in again to obtain a new token.
+4. **Fetch Specific Product**
+   ```graphql
+   query {
+     product(id: 1) {
+       id
+       name
+       price
+     }
+   }
+   ```
 
-If you encounter authentication errors, ensure your token is valid and hasn't expired.
+#### Mutations
 
-Remember to include the JWT token in the request headers for routes that require authentication:
-```bash
-Authorization: Bearer YOUR_JWT_TOKEN_HERE
-```
+1. **Create a New Category**
+   ```graphql
+   mutation {
+     createCategory(createCategoryData: { name: "Electronics" }) {
+       id
+       name
+     }
+   }
+   ```
+
+2. **Create a New Product**
+   ```graphql
+   mutation {
+     createProduct(createProductData: { categoryId: 1, name: "Laptop", price: 1000 }) {
+       id
+       name
+       price
+     }
+   }
+   ```
+
+3. **Update a Product**
+   ```graphql
+   mutation {
+     updateProduct(id: 1, updateProductData: { name: "Updated Laptop", price: 900 }) {
+       id
+       name
+       price
+     }
+   }
+   ```
+
+4. **Delete a Product**
+   ```graphql
+   mutation {
+     deleteProduct(id: 1)
+   }
+   ```

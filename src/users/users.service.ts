@@ -11,7 +11,6 @@ export class UsersService {
     ) {}
 
     async create(creatorRole: string, user: User): Promise<User> {
-        // If the new user is an admin, ensure the creator is also an admin
         if (user.role === 'admin' && creatorRole !== 'admin' && creatorRole !== null) {
             throw new ForbiddenException('Only admins can create new admin users');
         }
@@ -21,7 +20,7 @@ export class UsersService {
 
     async validateUser(username: string, pass: string): Promise<any> {
         const user = await this.userRepository.findOne({ where: { username: username } });
-        if (user && await bcrypt.compare(pass, user.password)) { // Comparing the hashed password
+        if (user && await bcrypt.compare(pass, user.password)) {
             const { password, ...result } = user;
             return result;
         }
@@ -39,7 +38,6 @@ export class UsersService {
             newAdmin.username = 'admin';
             newAdmin.password = 'admin';
             newAdmin.role = 'admin';
-            // Passing null as creatorRole to bypass the role check
             await this.create(null, newAdmin);
         }
     }
