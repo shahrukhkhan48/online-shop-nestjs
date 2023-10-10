@@ -10,7 +10,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { User } from "./users/user.entity";
 import { UsersModule } from "./users/user.module";
-import { UsersService } from './users/users.service'; // Ensure you import UsersService
+import { UsersService } from './users/users.service';
+import {AuthModule} from "./auth/auth.module"; // Ensure you import UsersService
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { UsersService } from './users/users.service'; // Ensure you import Users
     }),
     CategoriesModule,
     ProductsModule,
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

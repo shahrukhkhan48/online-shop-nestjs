@@ -37,7 +37,7 @@ export class UsersService {
         if (!adminUser) {
             const newAdmin = new User();
             newAdmin.username = 'admin';
-            newAdmin.password = await bcrypt.hash('admin', 10);
+            newAdmin.password = 'admin';
             newAdmin.role = 'admin';
             // Passing null as creatorRole to bypass the role check
             await this.create(null, newAdmin);

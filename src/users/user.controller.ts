@@ -1,7 +1,8 @@
 
-import {Controller, Post, Body, Req, ForbiddenException} from '@nestjs/common';
+import {Controller, Post, Body, Req, ForbiddenException, UseGuards} from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from './users.service';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @Controller('users')
 export class UserController {
@@ -10,6 +11,7 @@ export class UserController {
         private authService: AuthService,
     ) {}
 
+    @UseGuards(JwtAuthGuard)
     @Post('register')
     async register(@Req() req: any, @Body() user: any) {
         if (user.role === 'admin' && (!req.user || req.user.role !== 'admin')) {
