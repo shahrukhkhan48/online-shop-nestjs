@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shop API</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Welcome to the Online Shop API</h1>
+</header>
+<main>
+    <section>
+        <h2>Resources</h2>
+        <ul>
+            <li><a href="/Online%20Shop%20API.postman_collection.json" download>Download Postman Collection</a></li>
+            <li><a href="/graphql" target="_blank">Open GraphQL Playground</a></li>
+        </ul>
+    </section>
+    <section>
+        <h2>Using the REST API</h2>
+        <p>
+            The Online Shop API allows you to perform operations related to e-commerce functionalities.
+            You can manage users, products, and categories through various endpoints. Download the
+            Postman Collection above to explore and test the API endpoints interactively.
+        </p>
+        <h3>Authentication</h3>
+        <p>
+            Authentication is handled via JSON Web Tokens (JWT). To authenticate your requests,
+            use the <code>/users/login</code> endpoint with valid credentials to obtain a token.
+            Include this token in the Authorization header for subsequent requests that require authentication.
+        </p>
+        <h3>Endpoints</h3>
+        <p>Some of the available endpoints include:</p>
+        <ul>
+            <li><code>POST /users/register</code>: Register a new user.</li>
+            <li><code>POST /users/login</code>: Authenticate and retrieve a JWT token.</li>
+            <li><code>POST /products</code>: Create a new product (Admin only).</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Using GraphQL</h2>
+        <p>
+            In addition to the REST API, you can also interact with the server using GraphQL.
+            GraphQL allows you to request specific data and aggregate responses, which can
+            reduce the number of requests and optimize the data transmission.
+        </p>
+        <h3>GraphQL Playground</h3>
+        <p>
+            Open the GraphQL Playground using the link above. The playground allows you to
+            write, test, and optimize your GraphQL queries before implementing them in your application.
+        </p>
+        <h3>Queries and Mutations</h3>
+        <p>
+            In GraphQL, you retrieve data using Queries and modify data using Mutations.
+            Here are some examples of how you might interact with the API using GraphQL:
+        </p>
+        <h4>Query Example: Fetch All Categories</h4>
+        <pre><code>query {
+  categories {
+    id
+    name
+  }
+}
+</code></pre>
+        <h4>Mutation Example: Create a New Product</h4>
+        <pre><code>mutation {
+  createProduct(createProductData: {categoryId: 1, name: "New Product", price: 99}) {
+    id
+    name
+    price
+  }
+}
+</code></pre>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2023 Online Shop</p>
+</footer>
+</body>
+</html>
+
