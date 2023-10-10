@@ -1,5 +1,5 @@
 
-import { Controller, Post, Body, Req } from '@nestjs/common';
+import {Controller, Post, Body, Req, ForbiddenException} from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from './users.service';
 
@@ -11,8 +11,12 @@ export class UserController {
     ) {}
 
     @Post('register')
-    async register(@Body() user: any) {
-        const createdUser = await this.userService.create(user);
+    async register(@Req() req: any, @Body() user: any) {
+        if (user.role === 'admin' && (!req.user || req.user.role !== 'admin')) {
+            throw new ForbiddenException('Only admins can create new admin users');
+        }
+
+        const createdUser = await this.userService.create(req.user?.role, user);
         return this.authService.generateToken(createdUser);
     }
 

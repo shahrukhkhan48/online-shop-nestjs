@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {ForbiddenException, Injectable} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -10,8 +10,12 @@ export class UsersService {
         @InjectRepository(User) private userRepository: Repository<User>,
     ) {}
 
-    async create(user: User): Promise<User> {
-        user.password = await bcrypt.hash(user.password, 10); // Hashing the password
+    async create(creatorRole: string, user: User): Promise<User> {
+        // If the new user is an admin, ensure the creator is also an admin
+        if (user.role === 'admin' && creatorRole !== 'admin' && creatorRole !== null) {
+            throw new ForbiddenException('Only admins can create new admin users');
+        }
+        user.password = await bcrypt.hash(user.password, 10);
         return await this.userRepository.save(user);
     }
 
@@ -35,7 +39,9 @@ export class UsersService {
             newAdmin.username = 'admin';
             newAdmin.password = await bcrypt.hash('admin', 10);
             newAdmin.role = 'admin';
-            await this.create(newAdmin);
+            // Passing null as creatorRole to bypass the role check
+            await this.create(null, newAdmin);
         }
     }
+
 }
