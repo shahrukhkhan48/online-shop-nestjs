@@ -20,15 +20,6 @@ npm install
 
 2. Set up your PostgreSQL server and update the TypeORM configuration in `src/app.module.ts` with your database credentials.
 
-3. Initialize the database using the provided script:
-
-```bash
-psql -U your_db_username -d your_database_name -a -f scripts/db_initialization.sql
-```
-
-Replace `your_db_username` with your PostgreSQL username and `your_database_name` with the name of your database.
-
-4. Update the placeholder password for the admin user in the database with a hashed password.
 
 ### Running the Application
 
@@ -37,6 +28,13 @@ Start the NestJS application with:
 ```bash
 npm run start
 ```
+
+#### Admin User Creation
+
+When running the application with `npm run start`, if an admin user does not exist, one will be automatically created with the following credentials:
+- **Username**: admin
+- **Password**: admin
+- **Role**: admin
 
 ## Using the API
 

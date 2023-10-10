@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,9 +8,9 @@ import { Product } from './products/product.entity';
 import { Category } from './categories/category.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import {User} from "./users/user.entity";
-import {UsersModule} from "./users/user.module";
-
+import { User } from "./users/user.entity";
+import { UsersModule } from "./users/user.module";
+import { UsersService } from './users/users.service'; // Ensure you import UsersService
 
 @Module({
   imports: [
@@ -35,4 +35,10 @@ import {UsersModule} from "./users/user.module";
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private usersService: UsersService) {} // Inject UsersService
+
+  async onModuleInit() {
+    await this.usersService.createAdminUserIfNotExists(); // Create admin user if not exists
+  }
+}
