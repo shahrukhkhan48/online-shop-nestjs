@@ -9,6 +9,7 @@ import { Category } from './categories/category.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import {User} from "./users/user.entity";
+import {UsersModule} from "./users/user.module";
 
 
 @Module({
@@ -29,6 +30,7 @@ import {User} from "./users/user.entity";
     }),
     CategoriesModule,
     ProductsModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],
