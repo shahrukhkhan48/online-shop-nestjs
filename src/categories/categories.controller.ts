@@ -1,11 +1,12 @@
-import {Controller, Get, Post, Body, UseGuards} from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './create-category.dto';
 import { Category } from './category.model';
-import {RolesGuard} from "../users/roles.guard";
-import {Roles} from "../users/roles.decorator";
+import { RolesGuard } from '../users/roles.guard';
+import { Roles } from '../users/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
@@ -13,7 +14,7 @@ export class CategoriesController {
   @Roles('admin')
   @Post()
   async create(
-    @Body() createCategoryDto: CreateCategoryDto,
+      @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<Category> {
     return await this.categoriesService.create(createCategoryDto);
   }

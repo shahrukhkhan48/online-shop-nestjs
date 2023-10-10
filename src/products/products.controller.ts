@@ -16,8 +16,9 @@ import { UpdateProductDto } from './update-product.dto';
 import { Product } from "./product.entity";
 import { Roles } from '../users/roles.decorator';
 import { RolesGuard } from '../users/roles.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -31,8 +32,8 @@ export class ProductsController {
   @Roles('admin')
   @Put(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateProductDto: UpdateProductDto,
+      @Param('id', ParseIntPipe) id: number,
+      @Body() updateProductDto: UpdateProductDto,
   ): Promise<Product> {
     return await this.productsService.update(id, updateProductDto);
   }
@@ -44,7 +45,7 @@ export class ProductsController {
 
   @Get()
   async findAllByCategoryId(
-    @Query('categoryId', ParseIntPipe) categoryId: number,
+      @Query('categoryId', ParseIntPipe) categoryId: number,
   ): Promise<Product[]> {
     return await this.productsService.findAllByCategoryId(categoryId);
   }
@@ -52,7 +53,7 @@ export class ProductsController {
   @Roles('admin')
   @Delete(':id')
   async delete(
-    @Param('id', ParseIntPipe) id: number,
+      @Param('id', ParseIntPipe) id: number,
   ): Promise<{ success: boolean }> {
     const success = await this.productsService.delete(id);
     return { success };

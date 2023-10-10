@@ -1,8 +1,18 @@
-import { Resolver, Query, Args, Int, Mutation } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Args,
+  Int,
+  Mutation,
+  Context,
+} from '@nestjs/graphql';
 import { CategoriesService } from './categories.service';
 import { Category } from './category.entity';
 import { CreateCategoryDto } from './create-category.dto';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
+import { Roles } from '../users/roles.decorator';
+import { RolesGuard } from '../users/roles.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Resolver((of) => Category)
 export class CategoriesResolver {
@@ -15,7 +25,7 @@ export class CategoriesResolver {
 
   @Query((returns) => Category)
   async category(
-    @Args('id', { type: () => Int }) id: number,
+      @Args('id', { type: () => Int }) id: number,
   ): Promise<Category> {
     const category = await this.categoriesService.findById(id);
     if (!category) {
@@ -24,11 +34,14 @@ export class CategoriesResolver {
     return category;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
   @Mutation((returns) => Category)
   async createCategory(
-    @Args('createCategoryData') createCategoryData: CreateCategoryDto,
+      @Args('createCategoryData') createCategoryData: CreateCategoryDto,
+      @Context('user') user: any,
   ) {
+    console.log(user);
     return this.categoriesService.create(createCategoryData);
   }
-
 }
